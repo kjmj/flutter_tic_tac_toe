@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tic_tac_toe/board.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,50 +26,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> board = ['', '', '', '', '', '', '', '', ''];
-  String currTurn = 'o';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white12,
-      body: GridView.builder(
-        itemCount: 9,
-        gridDelegate:
-            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              _boxTapped(index);
-            },
-            child: Container(
-              child: Center(
-                child: Text(
-                  board[index],
-                  style: TextStyle(color: Colors.white, fontSize: 36),
-                ),
-              ),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-              ),
-            ),
-          );
-        },
-      ),
+      primary: false,
+      body: Board(),
     );
-  }
-
-  void _boxTapped(index) {
-    setState(() {
-      if(board[index] == '') {
-        if(currTurn == 'o') {
-          board[index] = 'o';
-          currTurn = 'x';
-        } else {
-          board[index] = 'x';
-          currTurn = 'o';
-        }
-      }
-    });
   }
 }
