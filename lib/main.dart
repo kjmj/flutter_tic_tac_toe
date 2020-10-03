@@ -26,6 +26,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<String> board = ['', '', '', '', '', '', '', '', ''];
+  String currTurn = 'o';
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _boxTapped(index) {
     setState(() {
-      board[index] = "o";
+      if(board[index] == '') {
+        if(currTurn == 'o') {
+          board[index] = 'o';
+          currTurn = 'x';
+        } else {
+          board[index] = 'x';
+          currTurn = 'o';
+        }
+      }
     });
   }
 }
