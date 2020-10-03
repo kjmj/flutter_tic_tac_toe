@@ -13,6 +13,7 @@ class _Board extends State<Board> {
   Widget build(BuildContext context) {
     return GridView.builder(
       itemCount: 9,
+      physics: NeverScrollableScrollPhysics(),
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
       itemBuilder: (context, index) {
