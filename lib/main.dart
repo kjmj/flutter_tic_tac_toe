@@ -25,6 +25,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<String> board = ['', '', '', '', '', '', '', '', ''];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,19 +36,30 @@ class _MyHomePageState extends State<MyHomePage> {
         gridDelegate:
             SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
         itemBuilder: (context, index) {
-          return Container(
-            child: Center(
-              child: Text(
-                index.toString(),
-                style: TextStyle(color: Colors.white, fontSize: 36),
+          return GestureDetector(
+            onTap: () {
+              _boxTapped(index);
+            },
+            child: Container(
+              child: Center(
+                child: Text(
+                  board[index],
+                  style: TextStyle(color: Colors.white, fontSize: 36),
+                ),
               ),
-            ),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+              ),
             ),
           );
         },
       ),
     );
+  }
+
+  void _boxTapped(index) {
+    setState(() {
+      board[index] = "o";
+    });
   }
 }
