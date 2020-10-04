@@ -7,7 +7,7 @@ class Board extends StatefulWidget {
 
 class _Board extends State<Board> {
   List<String> board = ['', '', '', '', '', '', '', '', ''];
-  String currTurn = 'o';
+  bool xTurn = true; // x goes first
 
   @override
   Widget build(BuildContext context) {
@@ -37,29 +37,20 @@ class _Board extends State<Board> {
     );
   }
 
-  /// Updates the state of the board, changes the current player, and determines
-  /// if any dialogs should be shown
+  /// Updates the state of the board, determines if any dialogs should be shown,
+  /// and changes the current player
   void _boxTapped(index) {
-    setState(() {
-      if (board[index] == '') {
-        if (currTurn == 'o') {
-          board[index] = 'o';
-          if (!_winner()) {
-            currTurn = 'x';
-          }
-        } else {
-          board[index] = 'x';
-          if (!_winner()) {
-            currTurn = 'o';
-          }
-        }
+    if (board[index] == '') {
+      setState(() {
+        xTurn ? board[index] = 'x' : board[index] = 'o';
+      });
+      if (_winner()) {
+        _winDialog();
+      } else if (!board.contains('')) {
+        _drawDialog();
+      } else {
+        xTurn = !xTurn;
       }
-    });
-    if (_winner()) {
-      _winDialog();
-    }
-    if (!board.contains('') && !_winner()) {
-      _drawDialog();
     }
   }
 
@@ -100,7 +91,8 @@ class _Board extends State<Board> {
 
   /// Dialog for when there is a winner
   Future<void> _winDialog() async {
-    return _endOfGameDialog('Player ' + currTurn + ' has won!');
+    String currPlayer = xTurn ? 'x' : 'o';
+    return _endOfGameDialog('Player ' + currPlayer + ' has won!');
   }
 
   /// Dialog for when there is a draw
@@ -115,6 +107,6 @@ class _Board extends State<Board> {
         board[i] = '';
       });
     }
-    currTurn = 'o';
+    xTurn = true;
   }
 }
