@@ -12,6 +12,7 @@ class _Board extends State<Board> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      shrinkWrap: true,
       itemCount: 9,
       physics: NeverScrollableScrollPhysics(),
       gridDelegate:
@@ -32,6 +33,9 @@ class _Board extends State<Board> {
             ),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.all(
+                Radius.circular(15),
+              ),
             ),
           ),
         );
