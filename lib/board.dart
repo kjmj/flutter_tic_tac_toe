@@ -18,6 +18,7 @@ class _Board extends State<Board> {
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
       itemBuilder: (context, index) {
         return GestureDetector(
+          key: Key('board_GestureDetector_index_' + index.toString()),
           onTap: () {
             _boxTapped(index);
           },
@@ -25,6 +26,7 @@ class _Board extends State<Board> {
             child: Center(
               child: Text(
                 board[index],
+                key: Key('board_Text_index_' + index.toString()),
                 style: TextStyle(color: Colors.white, fontSize: 36),
               ),
             ),
@@ -74,6 +76,7 @@ class _Board extends State<Board> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
+          key: Key('board_AlertDialog'),
           title: Text(title),
           actions: <Widget>[
             TextButton(

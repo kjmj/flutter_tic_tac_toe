@@ -28,7 +28,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white12,
-      primary: false,
       body: Board(),
     );
   }
