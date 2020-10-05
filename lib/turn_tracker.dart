@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'board_model.dart';
 
 class TurnTracker extends StatefulWidget {
   @override
@@ -8,12 +11,17 @@ class TurnTracker extends StatefulWidget {
 class _TurnTracker extends State<TurnTracker> {
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'Current Turn: ',
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 36,
-      ),
+    return Consumer<BoardModel>(
+      builder: (context, board, child) {
+        var currTurn = board.xTurn ? 'x' : 'o';
+        return Text(
+          'Current Turn: ' + currTurn,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 36,
+          ),
+        );
+      },
     );
   }
 }

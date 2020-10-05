@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tic_tac_toe/board.dart';
+import 'package:flutter_tic_tac_toe/board_model.dart';
 import 'package:flutter_tic_tac_toe/turn_tracker.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => BoardModel(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

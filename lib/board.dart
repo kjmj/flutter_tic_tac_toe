@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'board_model.dart';
 
 class Board extends StatefulWidget {
   @override
@@ -7,7 +10,6 @@ class Board extends StatefulWidget {
 
 class _Board extends State<Board> {
   List<String> board = ['', '', '', '', '', '', '', '', ''];
-  bool xTurn = true; // x goes first
 
   @override
   Widget build(BuildContext context) {
@@ -46,16 +48,18 @@ class _Board extends State<Board> {
   /// Updates the state of the board, determines if any dialogs should be shown,
   /// and changes the current player
   void _boxTapped(index) {
+    var boardModel = Provider.of<BoardModel>(context, listen: false);
+
     if (board[index] == '') {
       setState(() {
-        xTurn ? board[index] = 'x' : board[index] = 'o';
+        boardModel.xTurn ? board[index] = 'x' : board[index] = 'o';
       });
       if (_winner()) {
         _winDialog();
       } else if (!board.contains('')) {
         _drawDialog();
       } else {
-        xTurn = !xTurn;
+        boardModel.xTurn = !boardModel.xTurn;
       }
     }
   }
@@ -98,7 +102,9 @@ class _Board extends State<Board> {
 
   /// Dialog for when there is a winner
   Future<void> _winDialog() async {
-    String currPlayer = xTurn ? 'x' : 'o';
+    var boardModel = Provider.of<BoardModel>(context, listen: false);
+
+    String currPlayer = boardModel.xTurn ? 'x' : 'o';
     return _endOfGameDialog('Player ' + currPlayer + ' has won!');
   }
 
@@ -109,11 +115,13 @@ class _Board extends State<Board> {
 
   /// Clears the board, resets the current player
   void _resetBoard() {
+    var boardModel = Provider.of<BoardModel>(context, listen: false);
+
     for (int i = 0; i < board.length; i++) {
       setState(() {
         board[i] = '';
       });
     }
-    xTurn = true;
+    boardModel.xTurn = true;
   }
 }
