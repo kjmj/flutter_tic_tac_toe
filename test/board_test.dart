@@ -58,4 +58,18 @@ void main() {
     Text text = tester.firstWidget(find.byKey(Key('board_Text_index_5')));
     expect(text.data, 'x');
   });
+
+  testWidgets('the weird one', (WidgetTester tester) async {
+    // // use custom screen size cuz flutter is weird
+    // tester.binding.window.physicalSizeTestValue = Size(1080, 1920);
+    // // resets the screen to its orinal size after the test end
+    // addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+
+    await tester.pumpWidget(MaterialApp(home: Board()));
+    await tester.tap(find.byKey(Key('board_GestureDetector_index_6')));
+    await tester.pump();
+
+    Text text = tester.firstWidget(find.byKey(Key('board_Text_index_6')));
+    expect(text.data, 'x');
+  });
 }

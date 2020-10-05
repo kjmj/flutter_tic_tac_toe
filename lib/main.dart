@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tic_tac_toe/board.dart';
+import 'package:flutter_tic_tac_toe/turn_tracker.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,12 +29,19 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white12,
-      body: Center(
-        child: Padding(
-          child: Container(
-            child: Board(),
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            child: Container(
+              child: Column(
+                children: [
+                  TurnTracker(),
+                  Board(),
+                ],
+              ),
+            ),
+            padding: EdgeInsets.all(15),
           ),
-          padding: EdgeInsets.all(15),
         ),
       ),
     );
