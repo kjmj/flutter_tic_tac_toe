@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tic_tac_toe/lines.dart';
 import 'package:provider/provider.dart';
 
 import 'board_model.dart';
@@ -10,38 +11,78 @@ class Board extends StatefulWidget {
 
 class _Board extends State<Board> {
   List<String> board = ['', '', '', '', '', '', '', '', ''];
+  List<GlobalKey> keys = []; // give each grid piece a corresponding key
+  Offset widgetRootOffset; // offset of the root widget from the point (0, 0)
+
+  // the keys of the two points that won the game
+  GlobalKey winKey1;
+  GlobalKey winKey2;
+
+  // the offset of the two points that won the game
+  Offset winOffset1;
+  Offset winOffset2;
+
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => widgetRootOffset = _getOffset(context),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      itemCount: 9,
-      physics: NeverScrollableScrollPhysics(),
-      gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          key: Key('board_GestureDetector_index_' + index.toString()),
-          onTap: () {
-            _boxTapped(index);
+    keys = [];
+
+    return Stack(
+      children: [
+        GridView.builder(
+          shrinkWrap: true,
+          itemCount: 9,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate:
+              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+          itemBuilder: (context, index) {
+            GlobalKey pointKey = GlobalKey();
+            keys.add(pointKey);
+
+            return GestureDetector(
+              key: Key('board_GestureDetector_index_' + index.toString()),
+              onTap: () {
+                _boxTapped(index);
+              },
+              child: Container(
+                child: Center(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        height: 0,
+                        width: 0,
+                        key: pointKey,
+                      ),
+                      Text(
+                        board[index],
+                        key: Key('board_Text_index_' + index.toString()),
+                        style: TextStyle(color: Colors.white, fontSize: 36),
+                      ),
+                    ],
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(15),
+                  ),
+                ),
+              ),
+            );
           },
-          child: Container(
-            child: Center(
-              child: Text(
-                board[index],
-                key: Key('board_Text_index_' + index.toString()),
-                style: TextStyle(color: Colors.white, fontSize: 36),
-              ),
-            ),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.all(
-                Radius.circular(15),
-              ),
-            ),
-          ),
-        );
-      },
+        ),
+        Lines(
+          start: winOffset1,
+          end: winOffset2,
+        ),
+      ],
     );
   }
 
@@ -55,6 +96,12 @@ class _Board extends State<Board> {
         boardModel.xTurn ? board[index] = 'x' : board[index] = 'o';
       });
       if (_winner()) {
+        // update the offset of the winning points so a line can be drawn
+        setState(() {
+          winOffset1 = _getOffset(winKey1.currentContext) - widgetRootOffset;
+          winOffset2 = _getOffset(winKey2.currentContext) - widgetRootOffset;
+        });
+
         _winDialog();
       } else if (!board.contains('')) {
         _drawDialog();
@@ -65,15 +112,43 @@ class _Board extends State<Board> {
   }
 
   /// Returns true if there is a winner given the current state of the [board]
+  /// Also stores the two keys belonging to the points that make up a winning move
   bool _winner() {
-    return (board[0] == board[1] && board[1] == board[2] && board[0] != '') ||
-        (board[3] == board[4] && board[4] == board[5] && board[3] != '') ||
-        (board[6] == board[7] && board[7] == board[8] && board[6] != '') ||
-        (board[0] == board[3] && board[3] == board[6] && board[0] != '') ||
-        (board[1] == board[4] && board[4] == board[7] && board[1] != '') ||
-        (board[2] == board[5] && board[5] == board[8] && board[2] != '') ||
-        (board[0] == board[4] && board[4] == board[8] && board[0] != '') ||
-        (board[2] == board[4] && board[4] == board[6] && board[2] != '');
+    if (board[0] == board[1] && board[1] == board[2] && board[0] != '') {
+      winKey1 = keys[0];
+      winKey2 = keys[2];
+      return true;
+    } else if (board[3] == board[4] && board[4] == board[5] && board[3] != '') {
+      winKey1 = keys[3];
+      winKey2 = keys[5];
+      return true;
+    } else if (board[6] == board[7] && board[7] == board[8] && board[6] != '') {
+      winKey1 = keys[6];
+      winKey2 = keys[8];
+      return true;
+    } else if (board[0] == board[3] && board[3] == board[6] && board[0] != '') {
+      winKey1 = keys[0];
+      winKey2 = keys[6];
+      return true;
+    } else if (board[1] == board[4] && board[4] == board[7] && board[1] != '') {
+      winKey1 = keys[1];
+      winKey2 = keys[7];
+      return true;
+    } else if (board[2] == board[5] && board[5] == board[8] && board[2] != '') {
+      winKey1 = keys[2];
+      winKey2 = keys[8];
+      return true;
+    } else if (board[0] == board[4] && board[4] == board[8] && board[0] != '') {
+      winKey1 = keys[0];
+      winKey2 = keys[8];
+      return true;
+    } else if (board[2] == board[4] && board[4] == board[6] && board[2] != '') {
+      winKey1 = keys[2];
+      winKey2 = keys[6];
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /// Generic dialog to be shown at the end of a game containing [title]
@@ -91,6 +166,7 @@ class _Board extends State<Board> {
               child: Text('Play again'),
               onPressed: () {
                 _resetBoard();
+                _clearLine();
                 Navigator.of(context).pop();
               },
             ),
@@ -123,5 +199,23 @@ class _Board extends State<Board> {
       });
     }
     boardModel.xTurn = true;
+  }
+
+  /// Get the offset of a given [context] from [Offset.zero]
+  /// todo this should be moved into a shared service class
+  Offset _getOffset(BuildContext context) {
+    final RenderBox renderObject = context.findRenderObject();
+    return renderObject.localToGlobal(Offset.zero);
+  }
+
+  /// Clear the drawn line from the screen
+  void _clearLine() {
+    setState(() {
+      winKey1 = null;
+      winKey2 = null;
+
+      winOffset1 = null;
+      winOffset2 = null;
+    });
   }
 }
