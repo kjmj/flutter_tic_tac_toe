@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tic_tac_toe/lines.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 import 'board_model.dart';
 
@@ -13,10 +14,6 @@ class _Board extends State<Board> {
   List<String> board = ['', '', '', '', '', '', '', '', ''];
   List<GlobalKey> keys = []; // give each grid piece a corresponding key
   Offset widgetRootOffset; // offset of the root widget from the point (0, 0)
-
-  // the keys of the two points that won the game
-  GlobalKey winKey1;
-  GlobalKey winKey2;
 
   // the offset of the two points that won the game
   Offset winOffset1;
@@ -95,11 +92,15 @@ class _Board extends State<Board> {
       setState(() {
         boardModel.xTurn ? board[index] = 'x' : board[index] = 'o';
       });
-      if (_winner()) {
+
+      final winningPoints = _getWinningPoints();
+      if (winningPoints != null) {
         // update the offset of the winning points so a line can be drawn
         setState(() {
-          winOffset1 = _getOffset(winKey1.currentContext) - widgetRootOffset;
-          winOffset2 = _getOffset(winKey2.currentContext) - widgetRootOffset;
+          winOffset1 =
+              _getOffset(winningPoints.item1.currentContext) - widgetRootOffset;
+          winOffset2 =
+              _getOffset(winningPoints.item2.currentContext) - widgetRootOffset;
         });
 
         _winDialog();
@@ -111,43 +112,27 @@ class _Board extends State<Board> {
     }
   }
 
-  /// Returns true if there is a winner given the current state of the [board]
-  /// Also stores the two keys belonging to the points that make up a winning move
-  bool _winner() {
+  /// Given the state of the [board], if there is a winner, return a [Tuple2]
+  /// representing the two points that the game was won on. Otherwise, return null.
+  Tuple2<GlobalKey, GlobalKey> _getWinningPoints() {
     if (board[0] == board[1] && board[1] == board[2] && board[0] != '') {
-      winKey1 = keys[0];
-      winKey2 = keys[2];
-      return true;
+      return Tuple2(keys[0], keys[2]);
     } else if (board[3] == board[4] && board[4] == board[5] && board[3] != '') {
-      winKey1 = keys[3];
-      winKey2 = keys[5];
-      return true;
+      return Tuple2(keys[3], keys[5]);
     } else if (board[6] == board[7] && board[7] == board[8] && board[6] != '') {
-      winKey1 = keys[6];
-      winKey2 = keys[8];
-      return true;
+      return Tuple2(keys[6], keys[8]);
     } else if (board[0] == board[3] && board[3] == board[6] && board[0] != '') {
-      winKey1 = keys[0];
-      winKey2 = keys[6];
-      return true;
+      return Tuple2(keys[0], keys[6]);
     } else if (board[1] == board[4] && board[4] == board[7] && board[1] != '') {
-      winKey1 = keys[1];
-      winKey2 = keys[7];
-      return true;
+      return Tuple2(keys[1], keys[7]);
     } else if (board[2] == board[5] && board[5] == board[8] && board[2] != '') {
-      winKey1 = keys[2];
-      winKey2 = keys[8];
-      return true;
+      return Tuple2(keys[2], keys[8]);
     } else if (board[0] == board[4] && board[4] == board[8] && board[0] != '') {
-      winKey1 = keys[0];
-      winKey2 = keys[8];
-      return true;
+      return Tuple2(keys[0], keys[8]);
     } else if (board[2] == board[4] && board[4] == board[6] && board[2] != '') {
-      winKey1 = keys[2];
-      winKey2 = keys[6];
-      return true;
+      return Tuple2(keys[2], keys[6]);
     } else {
-      return false;
+      return null;
     }
   }
 
@@ -211,9 +196,6 @@ class _Board extends State<Board> {
   /// Clear the drawn line from the screen
   void _clearLine() {
     setState(() {
-      winKey1 = null;
-      winKey2 = null;
-
       winOffset1 = null;
       winOffset2 = null;
     });
