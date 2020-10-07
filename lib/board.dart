@@ -43,16 +43,11 @@ class _Board extends State<Board> {
             GlobalKey pointKey = GlobalKey();
             keys.add(pointKey);
 
-            return GestureDetector(
-              key: Key('board_GestureDetector_index_' + index.toString()),
-              onTap: () {
-                _boxTapped(index);
-              },
-              child: BoardCell(
-                pointKey: pointKey,
-                player: board[index],
-                index: index,
-              ),
+            return BoardCell(
+              pointKey: pointKey,
+              player: board[index],
+              index: index,
+              onTapped: () => _boxTapped(index),
             );
           },
         ),
