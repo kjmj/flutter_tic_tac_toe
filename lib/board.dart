@@ -3,6 +3,7 @@ import 'package:flutter_tic_tac_toe/lines.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+import 'board_cell.dart';
 import 'board_model.dart';
 
 class Board extends StatefulWidget {
@@ -47,30 +48,10 @@ class _Board extends State<Board> {
               onTap: () {
                 _boxTapped(index);
               },
-              child: Container(
-                child: Center(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox(
-                        height: 0,
-                        width: 0,
-                        key: pointKey,
-                      ),
-                      Text(
-                        board[index],
-                        key: Key('board_Text_index_' + index.toString()),
-                        style: TextStyle(color: Colors.white, fontSize: 36),
-                      ),
-                    ],
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(15),
-                  ),
-                ),
+              child: BoardCell(
+                pointKey: pointKey,
+                player: board[index],
+                index: index,
               ),
             );
           },
