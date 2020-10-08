@@ -44,6 +44,7 @@ class _Board extends State<Board> {
                   player: boardModel.board[index],
                   index: index,
                   onTapped: () => _boxTapped(index, boardModel),
+                  isGameOver: _isWinner(boardModel.board),
                 );
               },
             ),
@@ -67,9 +68,9 @@ class _Board extends State<Board> {
           ? boardModel.addToBoard('x', index)
           : boardModel.addToBoard('o', index);
 
-      final winningPoints = _getWinningPoints(board);
-      if (winningPoints != null) {
+      if (_isWinner(board)) {
         // update the offset of the winning points so a line can be drawn
+        final winningPoints = _getWinningPoints(board);
         boardModel.winOffset1 =
             _getOffset(winningPoints.item1.currentContext) - widgetRootOffset;
         boardModel.winOffset2 =
@@ -107,6 +108,11 @@ class _Board extends State<Board> {
     } else {
       return null;
     }
+  }
+
+  /// Return true if there is a winner given [board], false otherwise
+  bool _isWinner(List<String> board) {
+    return _getWinningPoints(board) != null ? true : false;
   }
 
   /// Get the offset of a given [context] from [Offset.zero]
