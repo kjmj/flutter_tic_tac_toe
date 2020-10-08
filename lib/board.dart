@@ -12,13 +12,9 @@ class Board extends StatefulWidget {
 }
 
 class _Board extends State<Board> {
-  List<String> board = ['', '', '', '', '', '', '', '', ''];
-  List<GlobalKey> keys = []; // give each grid piece a corresponding key
+  List<GlobalKey> keys =
+      new List(9); // give each grid piece a corresponding key
   Offset widgetRootOffset; // offset of the root widget from the point (0, 0)
-
-  // the offset of the two points that won the game
-  Offset winOffset1;
-  Offset winOffset2;
 
   void initState() {
     super.initState();
@@ -29,55 +25,55 @@ class _Board extends State<Board> {
 
   @override
   Widget build(BuildContext context) {
-    keys = [];
+    return Consumer<BoardModel>(
+      builder: (context, boardModel, child) {
+        return Stack(
+          children: [
+            GridView.builder(
+              shrinkWrap: true,
+              itemCount: 9,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate:
+                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+              itemBuilder: (context, index) {
+                GlobalKey pointKey = GlobalKey();
+                keys[index] = pointKey;
 
-    return Stack(
-      children: [
-        GridView.builder(
-          shrinkWrap: true,
-          itemCount: 9,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate:
-              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-          itemBuilder: (context, index) {
-            GlobalKey pointKey = GlobalKey();
-            keys.add(pointKey);
-
-            return BoardCell(
-              pointKey: pointKey,
-              player: board[index],
-              index: index,
-              onTapped: () => _boxTapped(index),
-            );
-          },
-        ),
-        Lines(
-          start: winOffset1,
-          end: winOffset2,
-        ),
-      ],
+                return BoardCell(
+                  pointKey: pointKey,
+                  player: boardModel.board[index],
+                  index: index,
+                  onTapped: () => _boxTapped(index, boardModel),
+                );
+              },
+            ),
+            Lines(
+              start: boardModel.winOffset1,
+              end: boardModel.winOffset2,
+            ),
+          ],
+        );
+      },
     );
   }
 
   /// Updates the state of the board, determines if any dialogs should be shown,
   /// and changes the current player
-  void _boxTapped(index) {
-    var boardModel = Provider.of<BoardModel>(context, listen: false);
+  void _boxTapped(int index, BoardModel boardModel) {
+    List<String> board = boardModel.board;
 
     if (board[index] == '') {
-      setState(() {
-        boardModel.xTurn ? board[index] = 'x' : board[index] = 'o';
-      });
+      boardModel.xTurn
+          ? boardModel.addToBoard('x', index)
+          : boardModel.addToBoard('o', index);
 
-      final winningPoints = _getWinningPoints();
+      final winningPoints = _getWinningPoints(board);
       if (winningPoints != null) {
         // update the offset of the winning points so a line can be drawn
-        setState(() {
-          winOffset1 =
-              _getOffset(winningPoints.item1.currentContext) - widgetRootOffset;
-          winOffset2 =
-              _getOffset(winningPoints.item2.currentContext) - widgetRootOffset;
-        });
+        boardModel.winOffset1 =
+            _getOffset(winningPoints.item1.currentContext) - widgetRootOffset;
+        boardModel.winOffset2 =
+            _getOffset(winningPoints.item2.currentContext) - widgetRootOffset;
 
         String currPlayer = boardModel.xTurn ? 'x' : 'o';
         boardModel.gameEndMessage = 'Player ' + currPlayer + ' has won!';
@@ -91,7 +87,7 @@ class _Board extends State<Board> {
 
   /// Given the state of the [board], if there is a winner, return a [Tuple2]
   /// representing the two points that the game was won on. Otherwise, return null.
-  Tuple2<GlobalKey, GlobalKey> _getWinningPoints() {
+  Tuple2<GlobalKey, GlobalKey> _getWinningPoints(List<String> board) {
     if (board[0] == board[1] && board[1] == board[2] && board[0] != '') {
       return Tuple2(keys[0], keys[2]);
     } else if (board[3] == board[4] && board[4] == board[5] && board[3] != '') {
@@ -113,30 +109,10 @@ class _Board extends State<Board> {
     }
   }
 
-  /// Clears the board, resets the current player
-  void _resetBoard() {
-    var boardModel = Provider.of<BoardModel>(context, listen: false);
-
-    for (int i = 0; i < board.length; i++) {
-      setState(() {
-        board[i] = '';
-      });
-    }
-    boardModel.xTurn = true;
-  }
-
   /// Get the offset of a given [context] from [Offset.zero]
   /// todo this should be moved into a shared service class
   Offset _getOffset(BuildContext context) {
     final RenderBox renderObject = context.findRenderObject();
     return renderObject.localToGlobal(Offset.zero);
-  }
-
-  /// Clear the drawn line from the screen
-  void _clearLine() {
-    setState(() {
-      winOffset1 = null;
-      winOffset2 = null;
-    });
   }
 }
