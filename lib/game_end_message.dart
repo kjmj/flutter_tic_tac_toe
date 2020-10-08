@@ -3,22 +3,21 @@ import 'package:provider/provider.dart';
 
 import 'board_model.dart';
 
-class TurnTracker extends StatefulWidget {
-  @override
-  _TurnTracker createState() => _TurnTracker();
-}
+class GameEndMessage extends StatelessWidget {
+  const GameEndMessage({
+    Key key,
+  }) : super(key: key);
 
-class _TurnTracker extends State<TurnTracker> {
   @override
   Widget build(BuildContext context) {
     return Consumer<BoardModel>(
       builder: (context, boardModel, child) {
-        String currTurn = boardModel.xTurn ? 'x' : 'o';
+        String message = boardModel.gameEndMessage;
         return Text(
-          'Current Turn: ' + currTurn,
+          message == null ? '' : message,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 36,
+            fontSize: 16,
           ),
         );
       },

@@ -79,9 +79,10 @@ class _Board extends State<Board> {
               _getOffset(winningPoints.item2.currentContext) - widgetRootOffset;
         });
 
-        _winDialog();
+        String currPlayer = boardModel.xTurn ? 'x' : 'o';
+        boardModel.gameEndMessage = 'Player ' + currPlayer + ' has won!';
       } else if (!board.contains('')) {
-        _drawDialog();
+        boardModel.gameEndMessage = 'Draw, nobody won!';
       } else {
         boardModel.xTurn = !boardModel.xTurn;
       }
@@ -110,44 +111,6 @@ class _Board extends State<Board> {
     } else {
       return null;
     }
-  }
-
-  /// Generic dialog to be shown at the end of a game containing [title]
-  /// This dialog will reset the board if they choose to play again
-  Future<void> _endOfGameDialog(String title) {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          key: Key('board_AlertDialog'),
-          title: Text(title),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Play again'),
-              onPressed: () {
-                _resetBoard();
-                _clearLine();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  /// Dialog for when there is a winner
-  Future<void> _winDialog() async {
-    var boardModel = Provider.of<BoardModel>(context, listen: false);
-
-    String currPlayer = boardModel.xTurn ? 'x' : 'o';
-    return _endOfGameDialog('Player ' + currPlayer + ' has won!');
-  }
-
-  /// Dialog for when there is a draw
-  Future<void> _drawDialog() async {
-    return _endOfGameDialog('Draw, nobody won!');
   }
 
   /// Clears the board, resets the current player

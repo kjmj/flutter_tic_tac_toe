@@ -7,4 +7,11 @@ class BoardModel extends ChangeNotifier {
     _xTurn = val;
     notifyListeners();
   }
+
+  String _gameEndMessage;
+  String get gameEndMessage => _gameEndMessage;
+  set gameEndMessage(String val) {
+    _gameEndMessage = val;
+    notifyListeners();
+  }
 }
