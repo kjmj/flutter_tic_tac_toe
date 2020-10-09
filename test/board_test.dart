@@ -6,8 +6,8 @@ import 'package:flutter_tic_tac_toe/board_model.dart';
 import 'package:provider/provider.dart';
 
 Widget mockBoard = MaterialApp(
-  home: InheritedProvider<BoardModel>(
-    create: (_) => BoardModel(),
+  home: ChangeNotifierProvider(
+    create: (context) => BoardModel(),
     child: Scaffold(
       body: Board(),
     ),
