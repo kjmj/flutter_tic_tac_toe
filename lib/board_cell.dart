@@ -18,6 +18,7 @@ class BoardCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return AbsorbPointer(
       absorbing: isGameOver,
       child: GestureDetector(
@@ -33,10 +34,22 @@ class BoardCell extends StatelessWidget {
                   width: 0,
                   key: pointKey,
                 ),
-                Text(
-                  player,
-                  key: Key('board_Text_index_' + index.toString()),
-                  style: TextStyle(color: Colors.white, fontSize: 36),
+                FractionallySizedBox(
+                  widthFactor: 0.9,
+                  heightFactor: 0.9,
+                  child: FittedBox(
+                    fit: BoxFit.fitHeight,
+                    child: Text(
+                      player,
+                      key: Key('board_Text_index_' + index.toString()),
+                      style: TextStyle(
+                        color: player == 'x'
+                            ? theme.primaryColor
+                            : theme.accentColor,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
               ],
             ),

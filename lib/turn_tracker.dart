@@ -17,7 +17,6 @@ class _TurnTracker extends State<TurnTracker> {
         return Text(
           'Current Turn: ' + currTurn,
           style: TextStyle(
-            color: Colors.white,
             fontSize: 36,
           ),
         );

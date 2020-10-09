@@ -16,7 +16,6 @@ class GameEndMessage extends StatelessWidget {
         return Text(
           message == null ? '' : message,
           style: TextStyle(
-            color: Colors.white,
             fontSize: 16,
           ),
         );
