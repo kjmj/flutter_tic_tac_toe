@@ -55,8 +55,9 @@ class LinePainter extends CustomPainter {
         _start,
         endProgress,
         Paint()
-          ..strokeWidth = 4
-          ..color = Colors.red);
+          ..strokeWidth = 8
+          ..strokeCap = StrokeCap.round
+          ..color = Colors.redAccent);
   }
 
   @override
