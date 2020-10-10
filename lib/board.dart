@@ -48,10 +48,12 @@ class _Board extends State<Board> {
                 );
               },
             ),
-            Lines(
-              start: boardModel.winOffset1,
-              end: boardModel.winOffset2,
-            ),
+            _isWinner(boardModel.board)
+                ? Lines(
+                    start: boardModel.winOffset1,
+                    end: boardModel.winOffset2,
+                  )
+                : Container(),
           ],
         );
       },
