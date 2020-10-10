@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_tic_tac_toe/board.dart';
 import 'package:flutter_tic_tac_toe/board_model.dart';
+import 'package:flutter_tic_tac_toe/global_vars/global_vars.dart';
 import 'package:provider/provider.dart';
 
 Widget mockBoard = MaterialApp(
@@ -14,11 +15,12 @@ Widget mockBoard = MaterialApp(
   ),
 );
 
+
 void main() {
   testWidgets('board starts empty', (WidgetTester tester) async {
     await tester.pumpWidget(mockBoard);
 
-    expect(find.text(''), findsNWidgets(9));
+    expect(find.byIcon(GlobalVars.blankIcon), findsNWidgets(9));
   });
 
   testWidgets('x is the starting player', (WidgetTester tester) async {
@@ -26,9 +28,9 @@ void main() {
     await tester.tap(find.byKey(Key('board_GestureDetector_index_0')));
     await tester.pump();
 
-    expect(find.text('x'), findsOneWidget);
-    expect(find.text('o'), findsNothing);
-    expect(find.text(''), findsNWidgets(8));
+    expect(find.byIcon(GlobalVars.xIcon), findsOneWidget);
+    expect(find.byIcon(GlobalVars.oIcon), findsNothing);
+    expect(find.byIcon(GlobalVars.blankIcon), findsNWidgets(8));
   });
 
   testWidgets('x and o alternate turns', (WidgetTester tester) async {
@@ -36,13 +38,13 @@ void main() {
     await tester.tap(find.byKey(Key('board_GestureDetector_index_0')));
     await tester.pump();
 
-    expect(find.text('x'), findsOneWidget);
-    expect(find.text('o'), findsNothing);
+    expect(find.byIcon(GlobalVars.xIcon), findsOneWidget);
+    expect(find.byIcon(GlobalVars.oIcon), findsNothing);
 
     await tester.tap(find.byKey(Key('board_GestureDetector_index_1')));
     await tester.pump();
 
-    expect(find.text('o'), findsOneWidget);
+    expect(find.byIcon(GlobalVars.oIcon), findsOneWidget);
   });
 
   testWidgets('tapping on a grid box that is occupied doesnt change the player',
@@ -51,13 +53,13 @@ void main() {
     await tester.tap(find.byKey(Key('board_GestureDetector_index_0')));
     await tester.pump();
 
-    expect(find.text('x'), findsOneWidget);
+    expect(find.byIcon(GlobalVars.xIcon), findsOneWidget);
 
     await tester.tap(find.byKey(Key('board_GestureDetector_index_0')));
     await tester.pump();
 
-    expect(find.text('x'), findsOneWidget);
-    expect(find.text('o'), findsNothing);
+    expect(find.byIcon(GlobalVars.xIcon), findsOneWidget);
+    expect(find.byIcon(GlobalVars.oIcon), findsNothing);
   });
 
   testWidgets('tapping on a grid box puts the mark in the correct spot',
@@ -66,7 +68,7 @@ void main() {
     await tester.tap(find.byKey(Key('board_GestureDetector_index_5')));
     await tester.pump();
 
-    Text text = tester.firstWidget(find.byKey(Key('board_Text_index_5')));
-    expect(text.data, 'x');
+    Icon icon = tester.firstWidget(find.byKey(Key('board_Icon_index_5')));
+    expect(icon.icon, GlobalVars.xIcon);
   });
 }

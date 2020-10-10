@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'global_vars/global_vars.dart';
+
 class BoardCell extends StatelessWidget {
   const BoardCell({
     Key key,
@@ -39,15 +41,12 @@ class BoardCell extends StatelessWidget {
                   heightFactor: 0.9,
                   child: FittedBox(
                     fit: BoxFit.fitHeight,
-                    child: Text(
-                      player,
-                      key: Key('board_Text_index_' + index.toString()),
-                      style: TextStyle(
-                        color: player == 'x'
-                            ? theme.primaryColor
-                            : theme.accentColor,
-                      ),
-                      textAlign: TextAlign.center,
+                    child: Icon(
+                      _getIcon(),
+                      key: Key('board_Icon_index_' + index.toString()),
+                      color: player == 'x'
+                          ? theme.primaryColor
+                          : theme.accentColor,
                     ),
                   ),
                 ),
@@ -63,5 +62,18 @@ class BoardCell extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Get the correct icon given the [player]
+  IconData _getIcon() {
+    IconData icon;
+
+    if (player == 'x') {
+      icon = GlobalVars.xIcon;
+    } else if (player == 'o') {
+      icon = GlobalVars.oIcon;
+    }
+
+    return icon;
   }
 }
