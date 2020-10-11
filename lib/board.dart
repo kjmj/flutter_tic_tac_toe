@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tic_tac_toe/lines.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
-import 'board_cell.dart';
-import 'board_model.dart';
+import 'package:flutter_tic_tac_toe/board_cell.dart';
+import 'package:flutter_tic_tac_toe/board_model.dart';
+import 'package:flutter_tic_tac_toe/lines.dart';
 
 class Board extends StatefulWidget {
   @override

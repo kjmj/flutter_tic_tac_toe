@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'global_vars/global_vars.dart';
+import 'package:flutter_tic_tac_toe/global_vars/global_vars.dart';
 
 class BoardCell extends StatelessWidget {
   const BoardCell({
