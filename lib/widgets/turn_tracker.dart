@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:flutter_tic_tac_toe/board_model.dart';
+import 'package:flutter_tic_tac_toe/models/board_model.dart';
 
 class TurnTracker extends StatefulWidget {
   @override
